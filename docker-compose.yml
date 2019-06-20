@@ -1,69 +1,72 @@
-version: '3.4'
+version: '3.7'
+# Example docker-compose 
+# See deluge and traefik docs for further info on them
 
 services:
   vpn:
-    image: dperson/openvpn-client
-    # cap_add, security_opt, and volume required for the image to function
+    image: coq478/openvpn-client
+	secrets:
+	  - OVPN_USERNAME
+	  - OVPN_PASSWORD
+    external: true
     cap_add:
       - net_admin
-    environment:
-      TZ: 'EST5EDT'
     networks:
       - default
-    read_only: true
-    tmpfs:
-      - /run
-      - /tmp
     restart: unless-stopped
-    security_opt:
-      - label:disable
-    stdin_open: true
     tty: true
     volumes:
       - /dev/net:/dev/net:z
-    # Put .ovpn configuration file in the /vpn directory (in "volumes:" above or
-    # launch using the command line arguments, IE pick one:
-    #  - ./vpn:/vpn
-    # command: 'server;user;password[;port]'
+      - ./vpn:/vpn
 
-  # Replace "service1" with and image with an actual service you want to run
-  service1:
-    image: docker_hub_user/container_name
-    depends_on:
-      - vpn
-    environment:
-      TZ: 'EST5EDT'
-    network_mode: "service:vpn"
-    restart: unless-stopped
-    stdin_open: true
-    tty: true
+  traefik:
+    image: traefik:latest
+    container_name: traefik
     volumes:
-      - /srv/service1:/var/lib/service1:Z
-
-  web:
-    image: dperson/nginx
-    depends_on:
-      - service1
-    environment:
-      TZ: 'EST5EDT'
-    links:
-      - vpn:service1
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - '${DIR_PREFIX}/traefik/traefik.toml:/traefik.toml'
+      - '${DIR_PREFIX}/traefik/acme.json:/acme.json'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.backend=traefik'
+      - 'traefik.frontend.rule=Host:traefik.${DOMAIN}'
+      - 'traefik.docker.network=traefik'
+      - 'traefik.port=8080'
     networks:
-      - default
+      - 'default'
+      - 'traefik'
     ports:
-      - "80:80"
-      - "443:443"
-    read_only: true
-    tmpfs:
-      - /run
-      - /tmp
-      - /var/cache/nginx
+      - '80:80'
+      - '443:443'
+    expose:
+      - '8080'
     restart: unless-stopped
-    stdin_open: true
-    tty: true
-    command: -w "http://service1:8888;/service1"
-    # service1 shares the network stack of vpn. The service can by reached using
-    # the name of the service as a hostname.
+
+  deluge:
+    image: linuxserver/deluge:latest
+    container_name: deluge
+    volumes:
+      - '${DIR_PREFIX}/deluge/downloads:/downloads'
+      - '${DIR_PREFIX}/deluge/config:/config'
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.backend=deluge'
+      - 'traefik.frontend.rule=Host:deluge.${DOMAIN}'
+      - 'traefik.port=8112'
+    network_mode: 'container:vpnclient'
+    restart: unless-stopped
 
 networks:
-  default:
+  default: null
+  traefik:
+    external: true
+
+secrets:
+  OVPN_USERNAME:
+    external: true
+  OVPN_PASSWORD:
+    external: true

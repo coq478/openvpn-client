@@ -1,18 +1,15 @@
-FROM alpine
-MAINTAINER David Personette <dperson@gmail.com>
+FROM debian:stretch
+MAINTAINER Connor Quick <connor_quick@harvard.edu>
 
-# Install openvpn
-RUN apk --no-cache --no-progress upgrade && \
-    apk --no-cache --no-progress add bash curl ip6tables iptables openvpn \
-                shadow tini && \
-    addgroup -S vpn && \
-    rm -rf /tmp/*
-
-COPY openvpn.sh /usr/bin/
+RUN apt-get update -y && \
+    apt-get install -y openvpn ufw curl
+    # apt-get install -y vim traceroute procps htop tcpdump
 
 HEALTHCHECK --interval=60s --timeout=15s --start-period=120s \
              CMD curl -L 'https://api.ipify.org'
 
 VOLUME ["/vpn"]
 
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/openvpn.sh"]
+WORKDIR "/vpn"
+
+ENTRYPOINT ["/vpn/init.sh"]
