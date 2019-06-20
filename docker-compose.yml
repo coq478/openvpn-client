@@ -6,8 +6,8 @@ services:
   vpn:
     image: coq478/openvpn-client
 	secrets:
-	  - OVPN_USERNAME
-	  - OVPN_PASSWORD
+	  - OVPN_CREDENTIALS
+	  - OVPN_REMOTE
     external: true
     cap_add:
       - net_admin
@@ -66,7 +66,7 @@ networks:
     external: true
 
 secrets:
-  OVPN_USERNAME:
-    external: true
-  OVPN_PASSWORD:
-    external: true
+  OVPN_CREDENTIALS:
+    file: credentials
+  OVPN_REMOTE:
+    file: remote

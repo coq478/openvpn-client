@@ -17,7 +17,7 @@ capable of traversing network address translators (NATs) and firewalls.
 
 This OpenVPN container was designed to be started first to provide a connection
 to other containers (using `--net=container:vpn`, see below *Starting an OpenVPN
-client instance*). 
+client instance*).
 
 A full client config file must be placed in `/vpn/client.ovpn`, OR a configuration
 can be generated based on provided credentials and a valid certificate. Examples of the three (3)
@@ -79,15 +79,15 @@ Example of rules
 
         To                         Action      From
         --                         ------      ----
-        Anywhere on eth1           ALLOW IN    192.168.1.1/24           
-        Anywhere on eth0           ALLOW IN    111.222.123.210           
-        Anywhere on tun0           ALLOW IN    Anywhere                  
-        Anywhere (v6) on tun0      ALLOW IN    Anywhere (v6)             
+        Anywhere on eth1           ALLOW IN    192.168.1.1/24
+        Anywhere on eth0           ALLOW IN    111.222.123.210
+        Anywhere on tun0           ALLOW IN    Anywhere
+        Anywhere (v6) on tun0      ALLOW IN    Anywhere (v6)
 
-        192.168.1.1/24             ALLOW OUT   Anywhere on eth1          
-        111.222.123.210            ALLOW OUT   Anywhere on eth0          
-        Anywhere                   ALLOW OUT   Anywhere on tun0          
-        Anywhere (v6)              ALLOW OUT   Anywhere (v6) on tun0  
+        192.168.1.1/24             ALLOW OUT   Anywhere on eth1
+        111.222.123.210            ALLOW OUT   Anywhere on eth0
+        Anywhere                   ALLOW OUT   Anywhere on tun0
+        Anywhere (v6)              ALLOW OUT   Anywhere (v6) on tun
 
 ## Issues
 
