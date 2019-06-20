@@ -5,9 +5,9 @@ version: '3.7'
 services:
   vpn:
     image: coq478/openvpn-client
-	secrets:
-	  - OVPN_CREDENTIALS
-	  - OVPN_REMOTE
+    secrets:
+      - OVPN_CREDENTIALS
+      - OVPN_REMOTE
     external: true
     cap_add:
       - net_admin
