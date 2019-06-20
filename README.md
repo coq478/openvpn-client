@@ -1,5 +1,11 @@
 [![logo](https://raw.githubusercontent.com/coq478/openvpn-client/master/logo.png)](https://openvpn.net/)
 
+[![Docker Automated build](https://img.shields.io/docker/cloud/automated/quickc/openvpn-client.svg)](https://hub.docker.com/r/quickc/openvpn-client/)
+[![Docker Build Status](https://img.shields.io/docker/cloud/build/quickc/openvpn-client.svg)](https://hub.docker.com/r/quickc/openvpn-client/)
+[![Docker image version](https://images.microbadger.com/badges/version/quickc/openvpn-client.svg)](https://microbadger.com/images/quickc/openvpn-client)
+[![Docker image size](https://images.microbadger.com/badges/image/quickc/openvpn-client.svg)](https://microbadger.com/images/quickc/openvpn-client)
+
+
 # OpenVPN
 
 This is an OpenVPN client docker container. It makes routing containers'

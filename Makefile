@@ -1,7 +1,7 @@
 CC=docker
 CXX=$(CC)-compose
 
-PROJECT=coq478/openvpn-client
+PROJECT=quickc/openvpn-client
 
 up:
 	$(CXX) up -d
