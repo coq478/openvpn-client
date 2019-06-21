@@ -4,7 +4,7 @@ version: '3.7'
 
 services:
   vpn:
-    image: coq478/openvpn-client
+    image: quickc/openvpn-client:latest
     secrets:
       - OVPN_CREDENTIALS
       - OVPN_REMOTE

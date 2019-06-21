@@ -65,7 +65,7 @@ can be found [here](https://github.com/coq478/openvpn-client/raw/master/vpn/exam
                --volumes /dev/net:/dev/net:z 
                --volumes `pwd`/vpn:/vpn 
                --name vpnclient 
-               -d coq478/openvpn-client
+               -d quickc/openvpn-client
 
 Once it's up other containers can be started using it's network connection:
 
