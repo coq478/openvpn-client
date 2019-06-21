@@ -4,6 +4,8 @@ CXX=$(CC)-compose
 DOCKER_REPO=quickc
 APP_NAME=openvpn-client
 
+VERSION=$(shell cat VERSION)
+
 .PHONY: help
 
 help: ## This help.
@@ -12,10 +14,10 @@ help: ## This help.
 .DEFAULT_GOAL := help
 
 build:
-	$(CC) build -t $(PROJECT) .
+	$(CC) build -t $(APP_NAME) .
 
 build-fresh:
-	$(CC) build -t $(PROJECT) --no-cache .
+	$(CC) build -t $(APP_NAME) --no-cache .
 
 up:
 	$(CXX) up -d
@@ -23,9 +25,9 @@ up:
 down:
 	$(CXX) down
 
-release: bump-version build-fresh publish
+release: bump-version build publish
 
-publish: repo-login publish-latest publish-version ## Publish the `{version}` and `latest` tagged containers to Docker Hub
+publish: publish-latest publish-version ## Publish the `{version}` and `latest` tagged containers to Docker Hub
 
 publish-latest: tag-latest ## Publish the `latest` tagged container to DockerHub
 	@echo 'publish latest to $(DOCKER_REPO)'
@@ -57,5 +59,5 @@ clean:
 	-$(CC) rm $(PROJECT)
 	-$(CC) rmi $(PROJECT)
 
-login:
+repo-login:
 	$(CC) login -u $(DOCKER_REPO)
